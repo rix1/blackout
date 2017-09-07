@@ -12,9 +12,13 @@
   "author": "Rix1",
   "license": "MIT",
   "dependencies": {
+    "animated": "^0.2.0",
+    "babel-plugin-inline-react-svg": "^0.2.0",
+    "classnames": "^2.2.5",
     "next": "^2.1.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "babel-plugin-inline-react-svg": "^0.2.0"
+    "react-transition-group": "^2.1.0",
+    "styled-components": "^2.1.1"
   }
 }

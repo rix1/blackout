@@ -6,7 +6,7 @@ import Row from '../../components/Row';
 class TransactionsPage extends Component {
   static async getInitialProps () {
     // eslint-disable-next-line no-undef
-    const customerId = '19078984062';
+    const customerId = '12345678910';
     const apiEndpoint = 'https://dnbapistore.com/hackathon/accounts/1.0/account/customer';
     const res = await fetch(`${apiEndpoint}/${customerId}`, {
       method: 'GET',
@@ -21,7 +21,7 @@ class TransactionsPage extends Component {
     const accounts = json.accounts || [];
 
     const fromDate = '01092017';
-    const toDate = '16092017';
+    const toDate = '17092017';
 
 
     await Promise.all(accounts.map(async account => {
@@ -38,7 +38,7 @@ class TransactionsPage extends Component {
 
       const transactions = await res.json();
       console.log(transactions);
-      account.transactions = transactions.transactions;
+      account.transactions = transactions.transactions || [];
       return account;
     }))
 
@@ -46,6 +46,7 @@ class TransactionsPage extends Component {
   }
 
   render() {
+    console.log(this.props.accounts);
     return (
       <Row>
         <h1>Transactions</h1>
@@ -56,14 +57,14 @@ class TransactionsPage extends Component {
             <li>List transactions</li>
             <li>List transactions</li>
           </ul>
-            {this.props.accounts.map(account => (
-              <div id={account.accountId}>
+            {this.props.accounts.map((account, index) => (
+              <div key={index} id={account.accountId}>
                 <h3>
                   {account.accountNumber}: {account.availableBalance}kr
                 </h3>
                 <ul>
-                  {account.transactions.map(transaction => (
-                  <li id={transaction.transactionID}>{transaction['message/KID']}: {transaction.transactionType}</li>
+                  {account.transactions.map((transaction, i) => (
+                  <li key={i} id={transaction.transactionID}>{transaction['message/KID']}: {transaction.amount}</li>
                   ))}
                 </ul>
               </div>

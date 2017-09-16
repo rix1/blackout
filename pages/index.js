@@ -39,6 +39,16 @@ const Index = props => {
               Map
             </Link>
           </li>
+          <li>
+            <Link
+              prefetch
+              href="/payment"
+              className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
+              title="Payment"
+            >
+              Payment
+            </Link>
+          </li>
         </ul>
       </section>
     </Row>

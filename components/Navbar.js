@@ -36,6 +36,7 @@ const Navbar = props => {
         <NavItem to="photos">Photos</NavItem>
         <NavItem to="transactions">Transactions</NavItem>
         <NavItem to="map">Map</NavItem>
+        <NavItem to="payment">Payment</NavItem>
       </StyledList>
     </nav>
   );

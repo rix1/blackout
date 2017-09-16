@@ -10,7 +10,7 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <title>NeoResQ: UMP-123</title>
+          <title>BLACKOUT 🙃</title>
           {styleTags}
           <link
             rel="shortcut icon"

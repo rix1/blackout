@@ -30,12 +30,12 @@ const Navbar = props => {
         className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
         title="Home"
       >
-        <Logo className="w4 h-auto mt1" />
+        [Blackout logo]
       </Link>
       <StyledList className="dtc v-mid w-75 tr">
-        <NavItem to="#product">Product</NavItem>
-        <NavItem to="#team">Team</NavItem>
-        <NavItem to="#demo">Request demo</NavItem>
+        <NavItem to="photos">Photos</NavItem>
+        <NavItem to="transactions">Transactions</NavItem>
+        <NavItem to="map">Map</NavItem>
       </StyledList>
     </nav>
   );

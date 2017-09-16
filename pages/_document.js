@@ -1,5 +1,6 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import Navbar from '../components/Navbar';
 
 export default class MyDocument extends Document {
   render() {
@@ -11,9 +12,16 @@ export default class MyDocument extends Document {
         <Head>
           <title>NeoResQ: UMP-123</title>
           {styleTags}
-          <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+          <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="/static/favicon.ico"
+          />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="stylesheet" href="https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css" />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css"
+          />
           <link
             href="https://fonts.googleapis.com/css?family=Lato:400,900"
             rel="stylesheet"
@@ -76,7 +84,10 @@ export default class MyDocument extends Document {
               box-shadow: inset 0px 0px 10px -1px rgba(0,0,0, 0.2);
             }
           `}</style>
-          <div className="root">{main}</div>
+          <div className="root">
+            <Navbar />
+            {main}
+          </div>
           <NextScript />
         </body>
       </html>

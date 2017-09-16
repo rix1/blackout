@@ -1,5 +1,5 @@
 {
-  "name": "neo-resq-beta",
+  "name": "blackout",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "start": "next start -p 8000"
   },
   "keywords": [],
-  "author": "Rix1",
+  "author": "some",
   "license": "MIT",
   "dependencies": {
     "animated": "^0.2.0",

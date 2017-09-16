@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import classNames from 'classnames';
 import Link from 'next/link';
-import Logo from '../svgs/neoresq-logo.svg';
+import Logo from '../svgs/blackout-logo.svg';
 
 const ItemList = ({ children, className }) => (
   <div className={classNames('dtc v-mid w-75 tr', className)}>{children}</div>
@@ -30,7 +30,7 @@ const Navbar = props => {
         className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
         title="Home"
       >
-        [Blackout logo]
+        <a><Logo className="w2 h-auto mt1" /></a>
       </Link>
       <StyledList className="dtc v-mid w-75 tr">
         <NavItem to="photos">Photos</NavItem>

@@ -31,7 +31,7 @@ class MapPage extends Component {
       const ACCESS_TOKEN = parsedRegex[2];
       const places = await getDailyData('2017-09-16', ACCESS_TOKEN);
       return {
-        places,
+        days: places,
       };
     }
 

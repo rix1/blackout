@@ -3,39 +3,19 @@ import Row from '../../components/Row';
 import Link from 'next/link';
 import 'isomorphic-fetch';
 import AuthorizeMovesButton from './authorizeMovesButton';
-import { BASE_API_URL } from './constants';
-
-const getDailyData = async (dayString, access_token) => {
-  const from = '2017-09-16';
-  const to = '2017-09-17';
-  const daily_url = `${BASE_API_URL}/user/places/daily/${dayString}`;
-  const story_url = `${BASE_API_URL}/user/storyline/daily?from=${from}&to=${to}&trackPoints=true`;
-
-  const placesResponse = await fetch(story_url, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-  return await placesResponse.json();
-};
 
 class MapPage extends Component {
   static async getInitialProps({ req }) {
-    // const access_token = 'access_token_lol';
-    // const temp = new RegExp(`(${queryParam}\=)([0-9a-z_]*)`, 'ig');
-    // console.log(temp);
+    const ACCESS_TOKEN = getTokenFromQuery(req.url, 'access_token');
 
-    const regex = /(access_token\=)([0-9a-z_]*)/gi;
-    const parsedRegex = regex.exec(req.url);
-    if (parsedRegex instanceof Array && parsedRegex.length > 1) {
-      const ACCESS_TOKEN = parsedRegex[2];
-      const places = await getDailyData('2017-09-16', ACCESS_TOKEN);
-      return {
-        days: places,
-      };
+    if (!ACCESS_TOKEN) {
+      return { places: null };
     }
 
-    return { places: null };
+    const places = await getDailyData('2017-09-16', ACCESS_TOKEN);
+    return {
+      days: places,
+    };
   }
 
   constructor() {
@@ -43,8 +23,7 @@ class MapPage extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   render() {
     // const { places } = this.props;
@@ -103,7 +82,7 @@ const SegmentList = ({ places }) => {
           return (
             <div>
               <p>
-                <strong>Sted:{' '}</strong>
+                <strong>Sted: </strong>
                 {name}
               </p>
             </div>

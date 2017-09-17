@@ -1,58 +1,49 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Link from 'next/link';
 import Row from '../components/Row';
 
-const Index = props => {
-  return (
-    <Row>
-      <h1>Blackout APP</h1>
-      <section>
-        <h2>Development routes:</h2>
-        <ul>
-          <li>
-            <Link
-              prefetch
-              href="/photos"
-              className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
-              title="Photos"
-            >
-              Photos
-            </Link>
-          </li>
-          <li>
-            <Link
-              prefetch
-              href="/transactions"
-              className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
-              title="Transactions"
-            >
-              Transactions
-            </Link>
-          </li>
-          <li>
-            <Link
-              prefetch
-              href="/map"
-              className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
-              title="Map"
-            >
-              Map
-            </Link>
-          </li>
-          <li>
-            <Link
-              prefetch
-              href="/payment"
-              className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
-              title="Payment"
-            >
-              Payment
-            </Link>
-          </li>
-        </ul>
-      </section>
-    </Row>
-  );
-};
+class Index extends Component {
+  constructor() {
+    super();
+    this.state = {
+      toggle: false,
+    };
+  }
+  render() {
+    return (
+      <Row className="">
+        <div className="flex-center vh-50">
+          <h1 className="f-headline ttu">
+            {this.state.toggle && (
+              <span
+                className="underline"
+                onClick={() => {
+                  this.setState({
+                    toggle: !this.state.toggle,
+                  });
+                }}
+              >
+                Black<span className="bg-black pr2 white">out</span>
+              </span>
+            )}
+            {!this.state.toggle && (
+              <span
+                onClick={() => {
+                  this.setState({
+                    toggle: !this.state.toggle,
+                  });
+                }}
+              >
+                <span className="">
+                  Hva <span className="bg-white black">skjedde?</span>
+                </span>
+              </span>
+            )}
+          </h1>
+        </div>
+      </Row>
+    );
+  }
+}
 
 export default Index;

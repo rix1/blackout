@@ -30,7 +30,7 @@ class TransactionsPage extends Component {
               <ul>
                 {account.transactions.map((transaction, i) => (
                   <li key={i} id={transaction.transactionID}>
-                    {transaction['message/KID']}: {transaction.amount}
+                    {transaction['message/KID']}: {transaction.amount}kr
                   </li>
                 ))}
               </ul>

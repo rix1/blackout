@@ -4,6 +4,7 @@ import moment from 'moment';
 import Row from '../../components/Row';
 import { getAccounts } from '../../lib/transaction-api';
 import { getDailyData } from '../../lib/maps-api';
+import MapWithControlledZoom from './map';
 
 class PhotosPage extends Component {
   static async getInitialProps({ req }) {
@@ -59,9 +60,11 @@ class PhotosPage extends Component {
       const transactionsAtPlace = [];
       const start = Number(moment(place.startTime).format('x'));
       const end = Number(moment(place.endTime).format('x'));
+      let sum = 0;
       computedTransactions.forEach(transaction => {
         const transactionTime = new Date(transaction.timeStamp).getTime();
         if (transactionTime >= start && transactionTime <= end) {
+          sum -= transaction.amount;
           transactionsAtPlace.push(transaction);
         }
       });
@@ -69,26 +72,34 @@ class PhotosPage extends Component {
       return {
         ...place,
         transactions: transactionsAtPlace,
+        totalAmount: sum,
       };
     });
 
-    console.log();
+    console.log('-----------', computedTransactions);
 
     return (
-      <Row>
-        <h1>Photos</h1>
-        <section>
-          <h2>Transaksjoner</h2>
-          <ul>
-            {merged.map(place => (
-              <Place
-                name={place.place.name}
-                transactions={place.transactions}
-              />
-            ))}
-          </ul>
-        </section>
-      </Row>
+      <div className="flex vh-95">
+        <Row className="flex-auto">
+          <h1>
+            Rix1's black<span className="bg-black white pr2">out</span>
+          </h1>
+          <section>
+            <h2>Transaksjoner</h2>
+            <ul>
+              {merged.map(place => (
+                <Place
+                  name={place.place.name}
+                  transactions={place.transactions}
+                />
+              ))}
+            </ul>
+          </section>
+        </Row>
+        <div className="flex-auto">
+          <MapWithControlledZoom places={merged} />
+        </div>
+      </div>
     );
   }
 }
@@ -111,19 +122,26 @@ const Place = ({ name, transactions = [] }) => {
       {transactions.length && (
         <ul>
           {transactions.map(
-            trans => trans.amount !== 0 && <Dollar amount={trans.amount} />,
+            (trans, index) =>
+              trans.amount !== 0 && (
+                <Dollar
+                  amount={trans.amount}
+                  last={transactions.length - 1 === index}
+                />
+              ),
           )}
         </ul>
       )}
-      <hr />
+      <hr className="o-30" />
     </div>
   );
 };
 
-const Dollar = ({ amount }) => (
-  <div className="dib bg-light-green ba b--light-silver pv2 ph4 mh2">
-    <span className="black-50">{amount}</span>
-  </div>
-);
+const Dollar = ({ amount, last }) => {
+  if (last) {
+    return <span className="b black-50">{amount} kr</span>;
+  }
+  return <span className="b black-50">{amount},</span>;
+};
 
 export default PhotosPage;

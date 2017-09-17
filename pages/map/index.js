@@ -19,11 +19,12 @@ class MapPage extends Component {
         '2017-09-16',
         '2017-09-17',
       );
+      console.log(places);
       return {
         days: places,
       };
     }
-    return { places: null };
+    return { days: [] };
   }
 
   constructor() {
@@ -36,49 +37,38 @@ class MapPage extends Component {
   render() {
     // const { places } = this.props;
     const places = null;
-    console.log(this.props);
-    const mergedSegments = [
-      ...this.props.days[0].segments,
-      ...this.props.days[1].segments,
-    ];
-
-    return (
-      <div>
+    if (!(this.props.days instanceof Array) || !this.props.days.length) {
+      return (
         <Row>
-          <div>
-            <h1>Map page</h1>
-            <section>
-              <h2>Todo:</h2>
-              <ul>
-                <li>Fetch location data</li>
-                <li>Display location data points in map container</li>
-                <li>Draw route between data points</li>
-              </ul>
-            </section>
-          </div>
+          <h2>Moves</h2>
+          <p>
+            <strong>Status:</strong> Du har ikke lagt til noen Moves-konto
+          </p>
+          <AuthorizeMovesButton />
         </Row>
-        <hr />
-        {!mergedSegments.length && (
-          <Row>
-            <h2>Moves</h2>
-            <p>
-              <strong>Status:</strong> Du har ikke lagt til noen Moves-konto
-            </p>
-            <AuthorizeMovesButton />
-          </Row>
-        )}
+      );
+    }
+    if (this.props.days && this.props.days[0]) {
+      const mergedSegments = [
+        ...this.props.days[0].segments,
+        ...this.props.days[1].segments,
+      ];
 
-        {mergedSegments.length && (
-          <Row>
-            <h2>Moves</h2>
-            <p>
-              <strong>Status:</strong> Moves-konto lagt til ✅
-            </p>
-            <SegmentList segments={mergedSegments} />
-          </Row>
-        )}
-      </div>
-    );
+      return (
+        <div>
+          {mergedSegments.length && (
+            <Row>
+              <h2>Moves</h2>
+              <p>
+                <strong>Status:</strong> Moves-konto lagt til ✅
+              </p>
+              <SegmentList segments={mergedSegments} />
+            </Row>
+          )}
+        </div>
+      );
+    }
+    return <p>Wops!</p>
   }
 }
 

@@ -33,10 +33,10 @@ const Navbar = props => {
         <a><Logo className="w2 h-auto mt1" /></a>
       </Link>
       <StyledList className="dtc v-mid w-75 tr">
-        <NavItem to="photos">Photos</NavItem>
-        <NavItem to="transactions">Transactions</NavItem>
-        <NavItem to="map">Map</NavItem>
-        <NavItem to="payment">Payment</NavItem>
+        <NavItem to="hva-skjedde">Hva skjedde?</NavItem>
+        <NavItem to="transactions">Transaksjoner</NavItem>
+        <NavItem to="map">Fiks kartet</NavItem>
+        <NavItem to="payment">Evig penger?</NavItem>
       </StyledList>
     </nav>
   );

@@ -4,7 +4,7 @@ import Link from 'next/link';
 // const CLIENT_SECRET =
 //   '98q8H4O6QBSUf_2WM0zAC0FVU86J4nTwN4YeJtwA7Nmx6L91kk36xX02m4Tw2Nn6';
 const CLIENT_ID = 'NcwguutGv1rQb51C6wvKFGesVuQfJ9kl';
-const REDIRECT_URI = 'http://localhost:3000/map/auth-success';
+const REDIRECT_URI = 'http://localhost:3000/auth-success';
 const AUTH_URL = 'https://api.moves-app.com/oauth/v1';
 const SCOPE = 'location activity';
 

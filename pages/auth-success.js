@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Link from 'next/link';
-import Row from '../../components/Row';
+import Row from '../components/Row';
 import 'isomorphic-fetch';
-import AuthorizeMovesButton from './authorizeMovesButton';
+import AuthorizeMovesButton from './map/authorizeMovesButton';
 
-import { getTokenFromQuery } from '../../lib/utils';
-import { requestAccessToken } from '../../lib/maps-api';
+import { getTokenFromQuery } from '../lib/utils';
+import { requestAccessToken } from '../lib/maps-api';
 
 class MapAuthSuccess extends Component {
   static async getInitialProps({ req }) {
@@ -71,7 +71,7 @@ class MapAuthSuccess extends Component {
           <h1>Jippi!</h1>
           <p>Vi har nå koblet oss på Moves-appen 🏃</p>
           <Link
-            href={`/map?access_token=${this.state.bearer.access_token}`}
+            href={`hva-skjedde?access_token=${this.state.bearer.access_token}`}
             className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
             title="Gå til map"
           >

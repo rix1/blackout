@@ -83,6 +83,9 @@ export default class MyDocument extends Document {
             .shadow-inset {
               box-shadow: inset 0px 0px 10px -1px rgba(0,0,0, 0.2);
             }
+            .vh-95 {
+              height: 95vh;
+            }
           `}</style>
           <div className="root">
             <Navbar />

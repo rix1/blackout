@@ -2,22 +2,45 @@ import React, { Component } from 'react';
 import Row from '../../components/Row';
 import Link from 'next/link';
 import 'isomorphic-fetch';
+import AuthorizeMovesButton from './authorizeMovesButton';
+import { BASE_API_URL } from './constants';
 
-const CLIENT_SECRET =
-  '98q8H4O6QBSUf_2WM0zAC0FVU86J4nTwN4YeJtwA7Nmx6L91kk36xX02m4Tw2Nn6';
-const CLIENT_ID = 'NcwguutGv1rQb51C6wvKFGesVuQfJ9kl';
-const REDIRECT_URI = 'http://localhost:3000/map-success';
-const SCOPE = 'location activity';
+const getDailyData = async (dayString, access_token) => {
+  const daily_url = `${BASE_API_URL}/user/places/daily/${dayString}`;
+  const placesResponse = await fetch(daily_url, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+  return await placesResponse.json();
+};
 
 class MapPage extends Component {
-  static async getInitialProps() {
-    // eslint-disable-next-line no-undef
-    const res = await fetch('https://api.github.com/repos/zeit/next.js');
-    const json = await res.json();
-    return { stars: json.stargazers_count };
+  static async getInitialProps({ req }) {
+    const regex = /(access_token\=)([0-9a-z_]*)/gi;
+    const parsedRegex = regex.exec(req.url);
+    if (parsedRegex instanceof Array && parsedRegex.length > 1) {
+      const ACCESS_TOKEN = parsedRegex[2];
+      const places = await getDailyData('2017-09-16', ACCESS_TOKEN);
+      return {
+        places,
+      };
+    }
+
+    return { stars: 0 };
+  }
+
+  constructor() {
+    super();
+    this.state = {};
+  }
+
+  componentDidMount() {
   }
 
   render() {
+    const { places } = this.props;
+    console.log(places);
     return (
       <div>
         <Row>
@@ -34,18 +57,56 @@ class MapPage extends Component {
           </div>
         </Row>
         <hr />
-        <Row>
-          <Link
-            href={`https://api.moves-app.com/oauth/v1/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${SCOPE}&redirect_uri=${REDIRECT_URI}`}
-            className="db dtc-l v-mid mid-gray link dim w-100 w-25-l tc tl-l"
-            title="Moves auth"
-          >
-            Authorize Moves
-          </Link>
-        </Row>
+        {!places && (
+          <Row>
+            <h2>Moves</h2>
+            <p>
+              <strong>Status:</strong> Du har ikke lagt til noen Moves-konto
+            </p>
+            <AuthorizeMovesButton />
+          </Row>
+        )}
+
+        {places && (
+          <Row>
+            <h2>Moves</h2>
+            <p>
+              <strong>Status:</strong> Moves-konto lagt til ✅
+            </p>
+            <SegmentList places={places[0]} />
+          </Row>
+        )}
       </div>
     );
   }
 }
+
+const SegmentList = ({ places }) => {
+  const { segments } = places;
+
+  if (segments instanceof Array) {
+    return (
+      <div>
+        {segments.map(seg => {
+          const { place } = seg;
+          const name = place.name || 'Ukjent sted';
+          return (
+            <div>
+              <p>
+                <strong>Sted:{' '}</strong>
+                {name}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  return (
+    <div>
+      <p>Wops, klarte ikke liste ut stedene du har vært</p>
+    </div>
+  );
+};
 
 export default MapPage;

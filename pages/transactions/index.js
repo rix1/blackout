@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import Row from '../../components/Row';
-import { getAccounts } from '../../lib/api';
+import { getAccounts } from '../../lib/transaction-api';
 
 class TransactionsPage extends Component {
   static async getInitialProps() {

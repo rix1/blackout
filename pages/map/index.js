@@ -4,18 +4,26 @@ import Link from 'next/link';
 import 'isomorphic-fetch';
 import AuthorizeMovesButton from './authorizeMovesButton';
 
+import { getTokenFromQuery } from '../../lib/utils';
+import { getDailyData } from '../../lib/maps-api';
+
 class MapPage extends Component {
   static async getInitialProps({ req }) {
-    const ACCESS_TOKEN = getTokenFromQuery(req.url, 'access_token');
+    const regex = /(access_token\=)([0-9a-z_]*)/gi;
+    const parsedRegex = regex.exec(req.url);
 
-    if (!ACCESS_TOKEN) {
-      return { places: null };
+    if (parsedRegex instanceof Array && parsedRegex.length > 1) {
+      const ACCESS_TOKEN = parsedRegex[2];
+      const places = await getDailyData(
+        ACCESS_TOKEN,
+        '2017-09-16',
+        '2017-09-17',
+      );
+      return {
+        days: places,
+      };
     }
-
-    const places = await getDailyData('2017-09-16', ACCESS_TOKEN);
-    return {
-      days: places,
-    };
+    return { places: null };
   }
 
   constructor() {
@@ -29,6 +37,10 @@ class MapPage extends Component {
     // const { places } = this.props;
     const places = null;
     console.log(this.props);
+    const mergedSegments = [
+      ...this.props.days[0].segments,
+      ...this.props.days[1].segments,
+    ];
 
     return (
       <div>
@@ -46,7 +58,7 @@ class MapPage extends Component {
           </div>
         </Row>
         <hr />
-        {!places && (
+        {!mergedSegments.length && (
           <Row>
             <h2>Moves</h2>
             <p>
@@ -56,13 +68,13 @@ class MapPage extends Component {
           </Row>
         )}
 
-        {places && (
+        {mergedSegments.length && (
           <Row>
             <h2>Moves</h2>
             <p>
               <strong>Status:</strong> Moves-konto lagt til ✅
             </p>
-            <SegmentList places={places[0]} />
+            <SegmentList segments={mergedSegments} />
           </Row>
         )}
       </div>
@@ -70,23 +82,33 @@ class MapPage extends Component {
   }
 }
 
-const SegmentList = ({ places }) => {
-  const { segments } = places;
-
+const SegmentList = ({ segments }) => {
+  console.log(segments);
   if (segments instanceof Array) {
     return (
       <div>
-        {segments.map(seg => {
-          const { place } = seg;
-          const name = place.name || 'Ukjent sted';
-          return (
-            <div>
-              <p>
-                <strong>Sted: </strong>
-                {name}
+        {segments.map((segment, index) => {
+          const { place, move } = segment;
+
+          if (segment.type === 'move') {
+            return (
+              <p key={`${segment.startTime}-${segment.endTime}-${index}`}>
+                <em>Transport: I kanskje 5 min. </em>
               </p>
-            </div>
-          );
+            );
+          }
+
+          if (segment.type === 'place') {
+            const name = place.name || 'Ukjent sted';
+            return (
+              <div key={`${segment.startTime}-${segment.endTime}-${index}}`}>
+                <p>
+                  <strong>Sted: </strong>
+                  {name}
+                </p>
+              </div>
+            );
+          }
         })}
       </div>
     );

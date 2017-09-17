@@ -4,9 +4,18 @@ import Row from '../../components/Row';
 import 'isomorphic-fetch';
 import AuthorizeMovesButton from './authorizeMovesButton';
 
+import { getTokenFromQuery } from '../../lib/utils';
+import { requestAccessToken } from '../../lib/maps-api';
+
 class MapAuthSuccess extends Component {
   static async getInitialProps({ req }) {
-    const AUTH_CODE = getTokenFromQuery(req.url, 'code');
+
+    const regex = /(code\=)([0-9a-z_]*)/gi;
+    const parsedRegex = regex.exec(req.url);
+    let AUTH_CODE;
+    if (parsedRegex instanceof Array && parsedRegex.length > 1) {
+      AUTH_CODE = parsedRegex[2];
+    }
 
     if (!AUTH_CODE) {
       return {

@@ -6,8 +6,12 @@ import AuthorizeMovesButton from './authorizeMovesButton';
 import { BASE_API_URL } from './constants';
 
 const getDailyData = async (dayString, access_token) => {
+  const from = '2017-09-16';
+  const to = '2017-09-17';
   const daily_url = `${BASE_API_URL}/user/places/daily/${dayString}`;
-  const placesResponse = await fetch(daily_url, {
+  const story_url = `${BASE_API_URL}/user/storyline/daily?from=${from}&to=${to}&trackPoints=true`;
+
+  const placesResponse = await fetch(story_url, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
@@ -17,6 +21,10 @@ const getDailyData = async (dayString, access_token) => {
 
 class MapPage extends Component {
   static async getInitialProps({ req }) {
+    // const access_token = 'access_token_lol';
+    // const temp = new RegExp(`(${queryParam}\=)([0-9a-z_]*)`, 'ig');
+    // console.log(temp);
+
     const regex = /(access_token\=)([0-9a-z_]*)/gi;
     const parsedRegex = regex.exec(req.url);
     if (parsedRegex instanceof Array && parsedRegex.length > 1) {
@@ -27,7 +35,7 @@ class MapPage extends Component {
       };
     }
 
-    return { stars: 0 };
+    return { places: null };
   }
 
   constructor() {
@@ -39,8 +47,10 @@ class MapPage extends Component {
   }
 
   render() {
-    const { places } = this.props;
-    console.log(places);
+    // const { places } = this.props;
+    const places = null;
+    console.log(this.props);
+
     return (
       <div>
         <Row>

@@ -3,38 +3,26 @@ import Row from '../../components/Row';
 import Link from 'next/link';
 import 'isomorphic-fetch';
 import AuthorizeMovesButton from './authorizeMovesButton';
-import { BASE_API_URL } from './constants';
 
-const getDailyData = async (dayString, access_token) => {
-  const from = '2017-09-16';
-  const to = '2017-09-17';
-  const daily_url = `${BASE_API_URL}/user/places/daily/${dayString}`;
-  const story_url = `${BASE_API_URL}/user/storyline/daily?from=${from}&to=${to}&trackPoints=true`;
-
-  const placesResponse = await fetch(story_url, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-  return await placesResponse.json();
-};
+import { getTokenFromQuery } from '../../lib/utils';
+import { getDailyData } from '../../lib/maps-api';
 
 class MapPage extends Component {
   static async getInitialProps({ req }) {
-    // const access_token = 'access_token_lol';
-    // const temp = new RegExp(`(${queryParam}\=)([0-9a-z_]*)`, 'ig');
-    // console.log(temp);
-
     const regex = /(access_token\=)([0-9a-z_]*)/gi;
     const parsedRegex = regex.exec(req.url);
+
     if (parsedRegex instanceof Array && parsedRegex.length > 1) {
       const ACCESS_TOKEN = parsedRegex[2];
-      const places = await getDailyData('2017-09-16', ACCESS_TOKEN);
+      const places = await getDailyData(
+        ACCESS_TOKEN,
+        '2017-09-16',
+        '2017-09-17',
+      );
       return {
-        places,
+        days: places,
       };
     }
-
     return { places: null };
   }
 
@@ -43,13 +31,16 @@ class MapPage extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   render() {
     // const { places } = this.props;
     const places = null;
     console.log(this.props);
+    const mergedSegments = [
+      ...this.props.days[0].segments,
+      ...this.props.days[1].segments,
+    ];
 
     return (
       <div>
@@ -67,7 +58,7 @@ class MapPage extends Component {
           </div>
         </Row>
         <hr />
-        {!places && (
+        {!mergedSegments.length && (
           <Row>
             <h2>Moves</h2>
             <p>
@@ -77,13 +68,13 @@ class MapPage extends Component {
           </Row>
         )}
 
-        {places && (
+        {mergedSegments.length && (
           <Row>
             <h2>Moves</h2>
             <p>
               <strong>Status:</strong> Moves-konto lagt til ✅
             </p>
-            <SegmentList places={places[0]} />
+            <SegmentList segments={mergedSegments} />
           </Row>
         )}
       </div>
@@ -91,23 +82,33 @@ class MapPage extends Component {
   }
 }
 
-const SegmentList = ({ places }) => {
-  const { segments } = places;
-
+const SegmentList = ({ segments }) => {
+  console.log(segments);
   if (segments instanceof Array) {
     return (
       <div>
-        {segments.map(seg => {
-          const { place } = seg;
-          const name = place.name || 'Ukjent sted';
-          return (
-            <div>
-              <p>
-                <strong>Sted:{' '}</strong>
-                {name}
+        {segments.map((segment, index) => {
+          const { place, move } = segment;
+
+          if (segment.type === 'move') {
+            return (
+              <p key={`${segment.startTime}-${segment.endTime}-${index}`}>
+                <em>Transport: I kanskje 5 min. </em>
               </p>
-            </div>
-          );
+            );
+          }
+
+          if (segment.type === 'place') {
+            const name = place.name || 'Ukjent sted';
+            return (
+              <div key={`${segment.startTime}-${segment.endTime}-${index}}`}>
+                <p>
+                  <strong>Sted: </strong>
+                  {name}
+                </p>
+              </div>
+            );
+          }
         })}
       </div>
     );

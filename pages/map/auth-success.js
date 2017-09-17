@@ -3,51 +3,32 @@ import Link from 'next/link';
 import Row from '../../components/Row';
 import 'isomorphic-fetch';
 import AuthorizeMovesButton from './authorizeMovesButton';
-import {
-  BASE_API_URL,
-  REDIRECT_URI,
-  CLIENT_SECRET,
-  CLIENT_ID,
-  SCOPE,
-} from './constants';
 
-const requestAccessToken = async authorization_code => {
-  console.info(
-    'INFO: Requesting access token with auth code',
-    authorization_code,
-  );
-  const props = {};
-
-  const access_url = `https://api.moves-app.com/oauth/v1/access_token?grant_type=authorization_code&code=${authorization_code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}`;
-  const res = await fetch(access_url, {
-    method: 'POST',
-  });
-  const bearer = await res.json();
-  console.info('INFO bearer received', bearer);
-  props['bearer'] = bearer;
-
-  // props['locationData'] = getDailyData('2017-09-16')[0];
-  return props;
-};
+import { getTokenFromQuery } from '../../lib/utils';
+import { requestAccessToken } from '../../lib/maps-api';
 
 class MapAuthSuccess extends Component {
   static async getInitialProps({ req }) {
+
     const regex = /(code\=)([0-9a-z_]*)/gi;
     const parsedRegex = regex.exec(req.url);
+    let AUTH_CODE;
     if (parsedRegex instanceof Array && parsedRegex.length > 1) {
-      const AUTH_CODE = parsedRegex[2];
-      const res = await requestAccessToken(AUTH_CODE);
-      return {
-        locationData: res.locationData,
-        bearer: res.bearer,
-      };
-    } else {
+      AUTH_CODE = parsedRegex[2];
+    }
+
+    if (!AUTH_CODE) {
       return {
         bearer: {
           error: 'Klarte ikke parse callback-url',
         },
       };
     }
+    const res = await requestAccessToken(AUTH_CODE);
+    return {
+      locationData: res.locationData,
+      bearer: res.bearer,
+    };
   }
 
   constructor() {

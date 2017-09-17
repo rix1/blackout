@@ -15,6 +15,7 @@
     "animated": "^0.2.0",
     "babel-plugin-inline-react-svg": "^0.2.0",
     "classnames": "^2.2.5",
+    "moment": "^2.18.1",
     "next": "^2.1.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
